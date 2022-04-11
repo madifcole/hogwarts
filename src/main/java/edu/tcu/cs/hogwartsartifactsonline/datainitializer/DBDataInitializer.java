@@ -1,19 +1,23 @@
 package edu.tcu.cs.hogwartsartifactsonline.datainitializer;
 
 import edu.tcu.cs.hogwartsartifactsonline.dao.ArtifactDao;
+import edu.tcu.cs.hogwartsartifactsonline.dao.WizardDao;
 import edu.tcu.cs.hogwartsartifactsonline.domain.Artifact;
+import edu.tcu.cs.hogwartsartifactsonline.domain.Wizard;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
 
 @Component
 public class DBDataInitializer implements CommandLineRunner {
 
     private ArtifactDao artifactDao;
+    private WizardDao wizardDao;
 
-    public DBDataInitializer(ArtifactDao artifactDao) {
+    public DBDataInitializer(ArtifactDao artifactDao, WizardDao wizardDao) {
         this.artifactDao = artifactDao;
+        this.wizardDao = wizardDao;
     }
-
     @Override
     public void run(String... args) throws Exception {
         Artifact a1 = new Artifact();
@@ -51,12 +55,27 @@ public class DBDataInitializer implements CommandLineRunner {
         a6.setName("Resurrection Stone");
         a6.setDescription("The Resurrection Stone allows the holder to bring back deceased");
         a6.setImageUrl("imageUrl");
-        artifactDao.save(a1);
-        artifactDao.save(a2);
-        artifactDao.save(a3);
-        artifactDao.save(a4);
-        artifactDao.save(a5);
+
+        Wizard w1 = new Wizard();
+        w1.setName("Albus Dumbledore");
+        w1.addArtifact(a1);
+        w1.addArtifact(a3);
+
+        Wizard w2 = new Wizard();
+        w2.setName("Harry Potter");
+        w2.addArtifact(a2);
+        w2.addArtifact(a4);
+
+        Wizard w3 = new Wizard();
+        w3.setName("Neville Longbottom");
+        w3.addArtifact(a5);
+
+        wizardDao.save(w1);
+        wizardDao.save(w2);
+        wizardDao.save(w3);
+        // Since a6 doesn't have an owner yet, we need to save it explicitly here
         artifactDao.save(a6);
+
 
 
     }
