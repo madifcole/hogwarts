@@ -1,10 +1,13 @@
 package edu.tcu.cs.hogwartsartifactsonline.controller;
 
+import edu.tcu.cs.hogwartsartifactsonline.domain.Artifact;
 import edu.tcu.cs.hogwartsartifactsonline.domain.Wizard;
 import edu.tcu.cs.hogwartsartifactsonline.domain.Result;
 import edu.tcu.cs.hogwartsartifactsonline.domain.StatusCode;
 import edu.tcu.cs.hogwartsartifactsonline.service.WizardService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/wizards")
@@ -16,7 +19,9 @@ public class WizardController {
     }
 
     @GetMapping
-    public Result findAll() { return new Result(true, StatusCode.SUCCESS, "Find All Success");
+    public Result findAll() {
+        List<Wizard> all = service.findAll();
+        return new Result(true, StatusCode.SUCCESS, "Find All Success", all);
     }
 
 
@@ -39,5 +44,11 @@ public class WizardController {
     public Result delete(@PathVariable Integer wizardId) {
         service.delete(wizardId);
         return new Result(true, StatusCode.SUCCESS, "Delete Success");
+    }
+
+    @PutMapping("/{wizardId}/{artifactId}")
+    public Result assignArtifact(@PathVariable Integer wizardId, @PathVariable String artifactId){
+        service.assignArtifact(wizardId, artifactId);
+        return new Result(true, StatusCode.SUCCESS, "Artifact Assignment Success");
     }
 }
